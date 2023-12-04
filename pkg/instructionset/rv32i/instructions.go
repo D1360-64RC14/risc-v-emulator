@@ -1,4 +1,4 @@
-package rv32ibase
+package rv32i
 
 import (
 	"github.com/d1360-64rc14/risc-v-emulator/pkg/interfaces"

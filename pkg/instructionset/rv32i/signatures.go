@@ -1,4 +1,4 @@
-package rv32ibase
+package rv32i
 
 const (
 	SIGNATURE_LUI   = 0b0110111
