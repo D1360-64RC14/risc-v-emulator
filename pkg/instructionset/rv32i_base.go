@@ -1,9 +1,9 @@
 package instructionset
 
 import (
-	"github.com/d1360-64rc14/risc-v-emulator/refact/instructionset/rv32ibase"
-	"github.com/d1360-64rc14/risc-v-emulator/refact/interfaces"
-	"github.com/d1360-64rc14/risc-v-emulator/refact/shared"
+	"github.com/d1360-64rc14/risc-v-emulator/pkg/instructionset/rv32ibase"
+	"github.com/d1360-64rc14/risc-v-emulator/pkg/interfaces"
+	"github.com/d1360-64rc14/risc-v-emulator/pkg/shared"
 )
 
 func RV32IBase(regs *[32]uint32, pc *uint32, mem interfaces.Memory[uint32], inst uint32) shared.Instruction[uint32] {

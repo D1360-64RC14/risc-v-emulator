@@ -3,7 +3,7 @@ package shared_test
 import (
 	"testing"
 
-	"github.com/d1360-64rc14/risc-v-emulator/internal/instruction"
+	"github.com/d1360-64rc14/risc-v-emulator/pkg/shared"
 )
 
 func TestOpCode(t *testing.T) {
@@ -28,7 +28,7 @@ func TestOpCode(t *testing.T) {
 
 	for _, c := range testCases {
 		t.Run(c.desc, func(t *testing.T) {
-			got := instruction.OpCode(c.inst)
+			got := shared.OpCode(c.inst)
 
 			if got != c.expected {
 				t.Errorf("E %b;\nG %b", c.expected, got)
@@ -58,7 +58,7 @@ func TestRS1(t *testing.T) {
 
 	for _, c := range testCases {
 		t.Run(c.desc, func(t *testing.T) {
-			got := instruction.RS1(c.inst)
+			got := shared.RS1(c.inst)
 
 			if got != c.expected {
 				t.Errorf("E %b;\nG %b", c.expected, got)
@@ -88,7 +88,7 @@ func TestRS2(t *testing.T) {
 
 	for _, c := range testCases {
 		t.Run(c.desc, func(t *testing.T) {
-			got := instruction.RS2(c.inst)
+			got := shared.RS2(c.inst)
 
 			if got != c.expected {
 				t.Errorf("E %b;\nG %b", c.expected, got)
@@ -118,7 +118,7 @@ func TestRD(t *testing.T) {
 
 	for _, c := range testCases {
 		t.Run(c.desc, func(t *testing.T) {
-			got := instruction.RD(c.inst)
+			got := shared.RD(c.inst)
 
 			if got != c.expected {
 				t.Errorf("E %b;\nG %b", c.expected, got)
@@ -148,7 +148,7 @@ func TestFunct3(t *testing.T) {
 
 	for _, c := range testCases {
 		t.Run(c.desc, func(t *testing.T) {
-			got := instruction.Funct3(c.inst)
+			got := shared.Funct3(c.inst)
 
 			if got != c.expected {
 				t.Errorf("E %b;\nG %b", c.expected, got)
@@ -178,7 +178,7 @@ func TestFunct7(t *testing.T) {
 
 	for _, c := range testCases {
 		t.Run(c.desc, func(t *testing.T) {
-			got := instruction.Funct7(c.inst)
+			got := shared.Funct7(c.inst)
 
 			if got != c.expected {
 				t.Errorf("E %b;\nG %b", c.expected, got)
@@ -204,7 +204,7 @@ func TestSignExtend(t *testing.T) {
 
 	for _, c := range testCases {
 		t.Run(c.desc, func(t *testing.T) {
-			got := instruction.SignExtend(c.number, c.bitSize)
+			got := shared.SignExtend(c.number, c.bitSize)
 
 			if got != c.expected {
 				t.Errorf("E %b;\nG %b", c.expected, got)
@@ -235,7 +235,7 @@ func TestImmI(t *testing.T) {
 
 	for _, c := range testCases {
 		t.Run(c.desc, func(t *testing.T) {
-			got := instruction.ImmI(c.inst)
+			got := shared.ImmI(c.inst)
 
 			if got != c.expected {
 				t.Errorf("E %b;\nG %b", c.expected, got)
@@ -266,7 +266,7 @@ func TestImmS(t *testing.T) {
 
 	for _, c := range testCases {
 		t.Run(c.desc, func(t *testing.T) {
-			got := instruction.ImmS(c.inst)
+			got := shared.ImmS(c.inst)
 
 			if got != c.expected {
 				t.Errorf("E %b;\nG %b", c.expected, got)
@@ -297,7 +297,7 @@ func TestImmB(t *testing.T) {
 
 	for _, c := range testCases {
 		t.Run(c.desc, func(t *testing.T) {
-			got := instruction.ImmB(c.inst)
+			got := shared.ImmB(c.inst)
 
 			if got != c.expected {
 				t.Errorf("E %b;\nG %b", c.expected, got)
@@ -328,7 +328,7 @@ func TestImmU(t *testing.T) {
 
 	for _, c := range testCases {
 		t.Run(c.desc, func(t *testing.T) {
-			got := instruction.ImmU(c.inst)
+			got := shared.ImmU(c.inst)
 
 			if got != c.expected {
 				t.Errorf("E %b;\nG %b", c.expected, got)
@@ -359,7 +359,7 @@ func TestImmJ(t *testing.T) {
 
 	for _, c := range testCases {
 		t.Run(c.desc, func(t *testing.T) {
-			got := instruction.ImmJ(c.inst)
+			got := shared.ImmJ(c.inst)
 
 			if got != c.expected {
 				t.Errorf("E %b;\nG %b", c.expected, got)

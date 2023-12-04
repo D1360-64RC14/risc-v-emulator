@@ -3,7 +3,7 @@ package shared
 import (
 	"math"
 
-	"github.com/d1360-64rc14/risc-v-emulator/refact/interfaces"
+	"github.com/d1360-64rc14/risc-v-emulator/pkg/interfaces"
 	"golang.org/x/exp/constraints"
 )
 

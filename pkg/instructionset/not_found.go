@@ -3,7 +3,7 @@ package instructionset
 import (
 	"fmt"
 
-	"github.com/d1360-64rc14/risc-v-emulator/refact/interfaces"
+	"github.com/d1360-64rc14/risc-v-emulator/pkg/interfaces"
 )
 
 // NotFound identifies an undefined instruction.

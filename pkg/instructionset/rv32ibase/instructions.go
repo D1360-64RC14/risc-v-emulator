@@ -1,8 +1,8 @@
 package rv32ibase
 
 import (
-	"github.com/d1360-64rc14/risc-v-emulator/refact/interfaces"
-	"github.com/d1360-64rc14/risc-v-emulator/refact/shared"
+	"github.com/d1360-64rc14/risc-v-emulator/pkg/interfaces"
+	"github.com/d1360-64rc14/risc-v-emulator/pkg/shared"
 )
 
 // LUI (load upper immediate) is used to build 32-bit constants and uses the U-type format. LUI

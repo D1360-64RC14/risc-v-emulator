@@ -1,10 +1,10 @@
 package rv32i
 
 import (
-	"github.com/d1360-64rc14/risc-v-emulator/refact/instructionset"
-	"github.com/d1360-64rc14/risc-v-emulator/refact/interfaces"
-	"github.com/d1360-64rc14/risc-v-emulator/refact/register"
-	"github.com/d1360-64rc14/risc-v-emulator/refact/shared"
+	"github.com/d1360-64rc14/risc-v-emulator/pkg/instructionset"
+	"github.com/d1360-64rc14/risc-v-emulator/pkg/interfaces"
+	"github.com/d1360-64rc14/risc-v-emulator/pkg/register"
+	"github.com/d1360-64rc14/risc-v-emulator/pkg/shared"
 )
 
 type RV32I struct {
