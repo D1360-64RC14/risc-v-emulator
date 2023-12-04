@@ -1,6 +1,11 @@
-package instruction
+package shared
 
-import "math"
+import (
+	"math"
+
+	"github.com/d1360-64rc14/risc-v-emulator/refact/interfaces"
+	"golang.org/x/exp/constraints"
+)
 
 const (
 	BIT_SIZE_OPCODE = 7
@@ -10,6 +15,8 @@ const (
 	BIT_SIZE_FUNCT3 = 3
 	BIT_SIZE_FUNCT7 = 7
 )
+
+type Instruction[A constraints.Unsigned] func(regs *[32]A, pc *A, mem interfaces.Memory[A], inst A)
 
 // OpCode of instruction.
 //

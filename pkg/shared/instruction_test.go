@@ -1,4 +1,4 @@
-package instruction_test
+package shared_test
 
 import (
 	"testing"

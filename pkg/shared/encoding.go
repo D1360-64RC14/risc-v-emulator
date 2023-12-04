@@ -1,4 +1,4 @@
-package riscv
+package shared
 
 // Type mapping
 const (

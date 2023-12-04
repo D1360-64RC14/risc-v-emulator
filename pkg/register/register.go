@@ -1,4 +1,4 @@
-package riscv
+package register
 
 // Register mapping
 const (
