@@ -2,11 +2,10 @@ package instructionset
 
 import (
 	"github.com/d1360-64rc14/risc-v-emulator/pkg/instructionset/rv32i"
-	"github.com/d1360-64rc14/risc-v-emulator/pkg/interfaces"
 	"github.com/d1360-64rc14/risc-v-emulator/pkg/shared"
 )
 
-func RV32IBase(regs *[32]uint32, pc *uint32, mem interfaces.Memory[uint32], inst uint32) shared.Instruction[uint32] {
+func RV32IBase(inst uint32) shared.Instruction[uint32] {
 	switch {
 	case inst&shared.U_TYPE == rv32i.SIGNATURE_LUI:
 		return rv32i.LUI

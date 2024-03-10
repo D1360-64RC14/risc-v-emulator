@@ -42,7 +42,7 @@ func (r *RV32I) fetch() uint32 {
 }
 
 func (r *RV32I) decode(inst uint32) shared.Instruction[uint32] {
-	return instructionset.RV32IBase(&r.regs, &r.pc, r.mem, inst)
+	return instructionset.RV32IBase(inst)
 }
 
 func (r *RV32I) execute(instFn shared.Instruction[uint32], inst uint32) {
