@@ -4,7 +4,7 @@ import (
 	"math"
 
 	"github.com/d1360-64rc14/risc-v-emulator/pkg/interfaces"
-	"golang.org/x/exp/constraints"
+	"github.com/d1360-64rc14/risc-v-emulator/pkg/types"
 )
 
 const (
@@ -16,7 +16,7 @@ const (
 	BIT_SIZE_FUNCT7 = 7
 )
 
-type Instruction[A constraints.Unsigned] func(regs *[32]A, pc *A, mem interfaces.Memory[A], inst A)
+type Instruction[Arch types.Architecture, RegMap interfaces.RegisterMapping] func(regs interfaces.Register[Arch, RegMap], pc *Arch, mem interfaces.Memory[Arch], inst Arch)
 
 // OpCode of instruction.
 //
@@ -28,22 +28,22 @@ func OpCode(inst uint32) uint32 {
 // Register Source 1 of instruction.
 //
 // inst[19:15]
-func RS1(inst uint32) uint32 {
-	return inst >> 15 & 0x1F
+func RS1(inst uint32) types.X32Regs {
+	return types.X32Regs(inst >> 15 & 0x1F)
 }
 
 // Register Source 2 of instruction.
 //
 // inst[24:20]
-func RS2(inst uint32) uint32 {
-	return inst >> 20 & 0x1F
+func RS2(inst uint32) types.X32Regs {
+	return types.X32Regs(inst >> 20 & 0x1F)
 }
 
 // Register Destination of instruction.
 //
 // inst[11:7]
-func RD(inst uint32) uint32 {
-	return inst >> 7 & 0x1F
+func RD(inst uint32) types.X32Regs {
+	return types.X32Regs(inst >> 7 & 0x1F)
 }
 
 // Funct3 of instruction.

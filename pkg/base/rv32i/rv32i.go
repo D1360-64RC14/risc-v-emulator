@@ -3,19 +3,20 @@ package rv32i
 import (
 	"github.com/d1360-64rc14/risc-v-emulator/pkg/instructionset"
 	"github.com/d1360-64rc14/risc-v-emulator/pkg/interfaces"
-	"github.com/d1360-64rc14/risc-v-emulator/pkg/register"
+	"github.com/d1360-64rc14/risc-v-emulator/pkg/register/x32register"
 	"github.com/d1360-64rc14/risc-v-emulator/pkg/shared"
+	"github.com/d1360-64rc14/risc-v-emulator/pkg/types"
 )
 
 type RV32I struct {
-	regs [32]uint32
+	regs *x32register.X32Register[uint32]
 	pc   uint32
 	mem  interfaces.Memory[uint32]
 }
 
 func New(mem interfaces.Memory[uint32]) *RV32I {
 	return &RV32I{
-		regs: [32]uint32{},
+		regs: x32register.New[uint32](),
 		pc:   0,
 		mem:  mem,
 	}
@@ -29,7 +30,6 @@ func (r *RV32I) Start() {
 		r.execute(instFn, inst)
 
 		r.pc += 4
-		r.regs[register.ZERO] = 0
 	}
 }
 
@@ -41,10 +41,10 @@ func (r *RV32I) fetch() uint32 {
 		uint32(r.mem.Load(r.pc+3))<<8*3
 }
 
-func (r *RV32I) decode(inst uint32) shared.Instruction[uint32] {
+func (r *RV32I) decode(inst uint32) shared.Instruction[uint32, types.X32Regs] {
 	return instructionset.RV32IBase(inst)
 }
 
-func (r *RV32I) execute(instFn shared.Instruction[uint32], inst uint32) {
-	instFn(&r.regs, &r.pc, r.mem, inst)
+func (r *RV32I) execute(instFn shared.Instruction[uint32, types.X32Regs], inst uint32) {
+	instFn(r.regs, &r.pc, r.mem, inst)
 }

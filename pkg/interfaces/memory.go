@@ -1,8 +1,8 @@
 package interfaces
 
-import "golang.org/x/exp/constraints"
+import "github.com/d1360-64rc14/risc-v-emulator/pkg/types"
 
-type Memory[A constraints.Unsigned] interface {
-	Load(addr A) byte
-	Store(addr A, data byte)
+type Memory[Arch types.Architecture] interface {
+	Load(addr Arch) byte
+	Store(addr Arch, data byte)
 }

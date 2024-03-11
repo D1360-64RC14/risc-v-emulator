@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/d1360-64rc14/risc-v-emulator/pkg/shared"
+	"github.com/d1360-64rc14/risc-v-emulator/pkg/types"
 )
 
 func TestOpCode(t *testing.T) {
@@ -40,7 +41,7 @@ func TestRS1(t *testing.T) {
 	testCases := []struct {
 		desc     string
 		inst     uint32
-		expected uint32
+		expected types.X32Regs
 	}{
 		{"only zeros with blank zeros", 0b000000000000_00000_000000000000000, 0b00000},
 		{"only zeros with blank ones", 0b111111111111_00000_111111111111111, 0b00000},
@@ -70,7 +71,7 @@ func TestRS2(t *testing.T) {
 	testCases := []struct {
 		desc     string
 		inst     uint32
-		expected uint32
+		expected types.X32Regs
 	}{
 		{"only zeros with blank zeros", 0b0000000_00000_00000000000000000000, 0b00000},
 		{"only zeros with blank ones", 0b1111111_00000_11111111111111111111, 0b00000},
@@ -100,7 +101,7 @@ func TestRD(t *testing.T) {
 	testCases := []struct {
 		desc     string
 		inst     uint32
-		expected uint32
+		expected types.X32Regs
 	}{
 		{"only zeros with blank zeros", 0b00000000000000000000_00000_0000000, 0b00000},
 		{"only zeros with blank ones", 0b11111111111111111111_00000_1111111, 0b00000},
