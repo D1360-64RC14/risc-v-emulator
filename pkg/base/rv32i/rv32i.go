@@ -35,10 +35,10 @@ func (r *RV32I) Start() {
 
 func (r *RV32I) fetch() uint32 {
 	return 0 |
-		uint32(r.mem.Load(r.pc+0))<<8*0 |
-		uint32(r.mem.Load(r.pc+1))<<8*1 |
-		uint32(r.mem.Load(r.pc+2))<<8*2 |
-		uint32(r.mem.Load(r.pc+3))<<8*3
+		uint32(r.mem.Load(r.pc+0))<<(8*0) |
+		uint32(r.mem.Load(r.pc+1))<<(8*1) |
+		uint32(r.mem.Load(r.pc+2))<<(8*2) |
+		uint32(r.mem.Load(r.pc+3))<<(8*3)
 }
 
 func (r *RV32I) decode(inst uint32) shared.Instruction[uint32, types.X32Regs] {
