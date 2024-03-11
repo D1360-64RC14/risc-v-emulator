@@ -2,10 +2,24 @@ package shared
 
 // Type mapping
 const (
+	// FUNCT7_RS2_RS1_FUNCT3_RD_OPCODE
 	R_TYPE = 0b111111_000000_00000_111_00000_1111111 // Register
-	I_TYPE = 0b111_00000_1111111                     // Immediate
-	S_TYPE = 0b111_00000_1111111                     // Store
-	B_TYPE = 0b111_00000_1111111                     // Branch
-	U_TYPE = 0b1111111                               // Upper Immediate
-	J_TYPE = 0b1111111                               // Jump
+
+	// IMM_RS1_FUNCT3_RD_OPCODE
+	I_TYPE = 0b0000000000000_0000_111_00000_1111111 // Immediate
+
+	// IMM_RS2_RS1_FUNCT3_IMM_OPCODE
+	S_TYPE = 0b0000000_00000_00000_111_00000_1111111 // Store
+
+	// IMM_IMM_RS2_RS1_FUNCT3_IMM_IMM_OPCODE
+	B_TYPE = 0b0_00000_000000_00000_111_0000_0_1111111 // Branch
+
+	// IMM_RD_OPCODE
+	U_TYPE = 0b00000000000000000000_00000_1111111 // Upper Immediate
+
+	// IMM_IMM_IMM_IMM_RD_OPCODE
+	J_TYPE = 0b0_0000000000_0_00000000_00000_1111111 // Jump
+
+	// IMM_RS1_FUNCT3_RD_OPCODE
+	E_TYPE = 0b000000000001_00000_000_00000_1111111 // Environment
 )
