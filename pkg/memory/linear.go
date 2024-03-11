@@ -21,10 +21,10 @@ func NewLinear[Arch types.Architecture](size Arch) *Linear[Arch] {
 	}
 }
 
-func (c *Linear[Arch]) Load(addr Arch) byte {
-	return c.data[addr%c.size]
+func (m *Linear[Arch]) Load(addr Arch) byte {
+	return m.data[addr%m.size]
 }
 
-func (c *Linear[Arch]) Store(addr Arch, data byte) {
-	c.data[addr%c.size] = data
+func (m *Linear[Arch]) Store(addr Arch, data byte) {
+	m.data[addr%m.size] = data
 }
