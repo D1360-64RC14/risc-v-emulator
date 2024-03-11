@@ -1,6 +1,8 @@
 package x32register
 
 import (
+	"fmt"
+
 	"github.com/d1360-64rc14/risc-v-emulator/pkg/interfaces"
 	"github.com/d1360-64rc14/risc-v-emulator/pkg/types"
 )
@@ -30,4 +32,11 @@ func (x *X32Register[Arch]) Set(reg types.X32Regs, value Arch) {
 	}
 
 	x.regs[reg] = value
+}
+
+func (x *X32Register[Arch]) Dump() {
+	fmt.Println("=== x32register.X32Register - Dump ===")
+	for i := 0; i < 32; i++ {
+		fmt.Printf("%2d: %08x - %d\n", i, x.regs[i], x.regs[i])
+	}
 }
