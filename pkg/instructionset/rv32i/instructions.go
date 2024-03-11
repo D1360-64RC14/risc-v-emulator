@@ -12,7 +12,10 @@ import (
 //
 // lui rd, imm
 func LUI(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
-	regs.Set(shared.RD(inst), shared.ImmU(inst))
+	rd := shared.RD(inst)
+	uImm := shared.ImmU(inst)
+
+	regs.Set(rd, uImm)
 }
 
 // AUIPC (add upper immediate to pc) is used to build pc-relative addresses and uses the U-type
@@ -22,9 +25,12 @@ func LUI(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interf
 //
 // auipc rd, imm
 func AUIPC(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
-	*pc += shared.ImmU(inst)
+	rd := shared.RD(inst)
+	uImm := shared.ImmU(inst)
 
-	regs.Set(shared.RD(inst), *pc)
+	*pc += uImm
+
+	regs.Set(rd, *pc)
 }
 
 // JAL (jump and link) is used to jump to a new immediate location and writes the address of the following
@@ -33,9 +39,12 @@ func AUIPC(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem inte
 //
 // jal rd, imm
 func JAL(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
-	*pc += shared.ImmJ(inst)
+	rd := shared.RD(inst)
+	jImm := shared.ImmJ(inst)
 
-	regs.Set(shared.RD(inst), *pc+4)
+	*pc += jImm
+
+	regs.Set(rd, *pc+4)
 }
 
 // JALR (jump and link reigster) is used to jump to a new register + immediate location and writes the
@@ -46,20 +55,25 @@ func JAL(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interf
 //
 // jalr rd, offset(rs1)
 func JALR(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
-	*pc += regs.Get(shared.RS1(inst)) + shared.ImmI(inst)
+	rd := shared.RD(inst)
+	rs1 := shared.RS1(inst)
+	iImm := shared.ImmI(inst)
 
-	regs.Set(shared.RD(inst), *pc+4)
+	*pc += regs.Get(rs1) + iImm
+
+	regs.Set(rd, *pc+4)
 }
 
 // BEQ (branch if equal) take the branch if registers rs1 and rs2 are equal.
 //
 // beq rs1, rs2, offset
 func BEQ(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
-	rs1 := regs.Get(shared.RS1(inst))
-	rs2 := regs.Get(shared.RS2(inst))
+	rs1 := shared.RS1(inst)
+	rs2 := shared.RS2(inst)
+	iImm := shared.ImmI(inst)
 
-	if rs1 == rs2 {
-		*pc += shared.ImmI(inst)
+	if regs.Get(rs1) == regs.Get(rs2) {
+		*pc += iImm
 	}
 }
 
@@ -67,11 +81,12 @@ func BEQ(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interf
 //
 // bne rs1, rs2, offset
 func BNE(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
-	rs1 := regs.Get(shared.RS1(inst))
-	rs2 := regs.Get(shared.RS2(inst))
+	rs1 := shared.RS1(inst)
+	rs2 := shared.RS2(inst)
+	iImm := shared.ImmI(inst)
 
-	if rs1 != rs2 {
-		*pc += shared.ImmI(inst)
+	if regs.Get(rs1) != regs.Get(rs2) {
+		*pc += iImm
 	}
 }
 
@@ -80,14 +95,15 @@ func BNE(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interf
 //
 // blt rs1, rs2, offset
 func BLT(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
-	rs1 := regs.Get(shared.RS1(inst))
-	rs2 := regs.Get(shared.RS2(inst))
+	rs1 := shared.RS1(inst)
+	rs2 := shared.RS2(inst)
+	iImm := shared.ImmI(inst)
 
-	equalSignBit := rs1>>31 == rs2>>31
+	equalSignBit := regs.Get(rs1)>>31 == regs.Get(rs2)>>31
 
 	// If equals sign bit, can be compared directly; else, need to do arithmetics to correct number.
-	if (equalSignBit && rs1 < rs2) || rs1-rs2 < rs1 {
-		*pc += shared.ImmI(inst)
+	if (equalSignBit && regs.Get(rs1) < regs.Get(rs2)) || regs.Get(rs1)-regs.Get(rs2) < regs.Get(rs1) {
+		*pc += iImm
 	}
 }
 
@@ -96,14 +112,15 @@ func BLT(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interf
 //
 // bge rs1, rs2, offset
 func BGE(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
-	rs1 := regs.Get(shared.RS1(inst))
-	rs2 := regs.Get(shared.RS2(inst))
+	rs1 := shared.RS1(inst)
+	rs2 := shared.RS2(inst)
+	iImm := shared.ImmI(inst)
 
-	signBitEquals := rs1>>31 == rs2>>31
+	signBitEquals := regs.Get(rs1)>>31 == regs.Get(rs2)>>31
 
 	// If equals sign bit, can be compared directly; else, need to do arithmetics to correct number.
-	if (signBitEquals && rs1 >= rs2) || rs1-rs2 >= rs1 {
-		*pc += shared.ImmI(inst)
+	if (signBitEquals && regs.Get(rs1) >= regs.Get(rs2)) || regs.Get(rs1)-regs.Get(rs2) >= regs.Get(rs1) {
+		*pc += iImm
 	}
 }
 
@@ -112,10 +129,10 @@ func BGE(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interf
 //
 // bltu rs1, rs2, offset
 func BLTU(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
-	rs1 := regs.Get(shared.RS1(inst))
-	rs2 := regs.Get(shared.RS2(inst))
+	rs1 := shared.RS1(inst)
+	rs2 := shared.RS2(inst)
 
-	if rs1 < rs2 {
+	if regs.Get(rs1) < regs.Get(rs2) {
 		*pc += shared.ImmI(inst)
 	}
 }
@@ -125,10 +142,10 @@ func BLTU(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem inter
 //
 // bgeu rs1, rs2, offset
 func BGEU(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
-	rs1 := regs.Get(shared.RS1(inst))
-	rs2 := regs.Get(shared.RS2(inst))
+	rs1 := shared.RS1(inst)
+	rs2 := shared.RS2(inst)
 
-	if rs1 >= rs2 {
+	if regs.Get(rs1) >= regs.Get(rs2) {
 		*pc += shared.ImmI(inst)
 	}
 }
@@ -138,11 +155,13 @@ func BGEU(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem inter
 //
 // lb rd, offset(rs1)
 func LB(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
-	rs1 := regs.Get(shared.RS1(inst))
+	rd := shared.RD(inst)
+	rs1 := shared.RS1(inst)
+	iImm := shared.ImmI(inst)
 
-	loadedByte := mem.Load(shared.ImmI(inst) + rs1)
+	loadedByte := mem.Load(iImm + regs.Get(rs1))
 
-	regs.Set(shared.RD(inst), shared.SignExtend(uint32(loadedByte), 8))
+	regs.Set(rd, shared.SignExtend(uint32(loadedByte), 8))
 }
 
 // LH (load half-word) loads a 16-bit value from memory at address offset + rs to rd.
@@ -150,25 +169,29 @@ func LB(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfa
 //
 // lh rd, offset(rs)
 func LH(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
-	rs1 := regs.Get(shared.RS1(inst))
+	rd := shared.RD(inst)
+	rs1 := shared.RS1(inst)
+	iImm := shared.ImmI(inst)
 
-	offsetBase := shared.ImmI(inst) + rs1
+	offsetBase := iImm + regs.Get(rs1)
 
 	loadedByte0 := mem.Load(offsetBase + 0)
 	loadedByte1 := mem.Load(offsetBase + 1)
 
 	loadedHalfW := uint32(loadedByte0) | uint32(loadedByte1)<<8
 
-	regs.Set(shared.RD(inst), shared.SignExtend(loadedHalfW, 16))
+	regs.Set(rd, shared.SignExtend(loadedHalfW, 16))
 }
 
 // LW (load word) loads a 32-bit value from memory at address offset + rs to rd.
 //
 // lw rd, offset(rs)
 func LW(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
-	rs1 := regs.Get(shared.RS1(inst))
+	rd := shared.RD(inst)
+	rs1 := shared.RS1(inst)
+	iImm := shared.ImmI(inst)
 
-	offsetBase := shared.ImmI(inst) + rs1
+	offsetBase := iImm + regs.Get(rs1)
 
 	loadedByte0 := mem.Load(offsetBase + 0)
 	loadedByte1 := mem.Load(offsetBase + 1)
@@ -181,7 +204,7 @@ func LW(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfa
 		uint32(loadedByte2)<<(2*8) |
 		uint32(loadedByte3)<<(3*8)
 
-	regs.Set(shared.RD(inst), loadedWord)
+	regs.Set(rd, loadedWord)
 }
 
 // LBU (load byte unsigned) loads an 8-bit value from memory at address offset + rs to rd.
@@ -189,11 +212,13 @@ func LW(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfa
 //
 // lbu rd, offset(rs)
 func LBU(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
-	rs1 := regs.Get(shared.RS1(inst))
+	rd := shared.RD(inst)
+	rs1 := shared.RS1(inst)
+	iImm := shared.ImmI(inst)
 
-	loadedByte := mem.Load(shared.ImmI(inst) + rs1)
+	loadedByte := mem.Load(iImm + regs.Get(rs1))
 
-	regs.Set(shared.RD(inst), uint32(loadedByte))
+	regs.Set(rd, uint32(loadedByte))
 }
 
 // LHU (load half-word unsigned) loads a 16-bit value from memory at address offset + rs to rd.
@@ -201,40 +226,45 @@ func LBU(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interf
 //
 // lhu rd, offset(rs)
 func LHU(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
-	rs1 := regs.Get(shared.RS1(inst))
+	rd := shared.RD(inst)
+	rs1 := shared.RS1(inst)
+	iImm := shared.ImmI(inst)
 
-	offsetBase := shared.ImmI(inst) + rs1
+	offsetBase := iImm + regs.Get(rs1)
 
 	loadedByte0 := mem.Load(offsetBase + 0)
 	loadedByte1 := mem.Load(offsetBase + 1)
 
 	loadedHalfW := uint32(loadedByte0) | uint32(loadedByte1)<<8
 
-	regs.Set(shared.RD(inst), loadedHalfW)
+	regs.Set(rd, loadedHalfW)
 }
 
 // SB (store byte) stores the lower 8-bits of rs2 to memory at address offset + rs1.
 //
 // sb rs2, offset(rs1)
 func SB(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
-	rs1 := regs.Get(shared.RS1(inst))
-	rs2 := regs.Get(shared.RS2(inst))
+	rs1 := shared.RS1(inst)
+	rs2 := shared.RS2(inst)
+	sImm := shared.ImmS(inst)
 
-	mem.Store(shared.ImmS(inst)+rs1, byte(rs2))
+	mem.Store(sImm+regs.Get(rs1), byte(regs.Get(rs2)))
 }
 
 // SH (store half-word) stores the lower 16-bits of rs2 to memory at address offset + rs1.
 //
 // sb rs2, offset(rs1)
 func SH(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
-	rs2 := regs.Get(shared.RS2(inst))
+	rs1 := shared.RS1(inst)
+	rs2 := shared.RS2(inst)
+	sImm := shared.ImmS(inst)
 
-	rs2Value := rs2
+	rs2Value := regs.Get(rs2)
 
 	byte0 := byte(rs2Value >> 0)
 	byte1 := byte(rs2Value >> 8)
 
-	offsetBase := shared.ImmS(inst) + uint32(shared.RS1(inst))
+	offsetBase := sImm + uint32(rs1)
 
 	mem.Store(offsetBase+0, byte0)
 	mem.Store(offsetBase+1, byte1)
@@ -244,16 +274,18 @@ func SH(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfa
 //
 // sb rs2, offset(rs1)
 func SW(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
-	rs2 := regs.Get(shared.RS2(inst))
+	rs1 := shared.RS1(inst)
+	rs2 := shared.RS2(inst)
+	sImm := shared.ImmS(inst)
 
-	rs2Value := rs2
+	rs2Value := regs.Get(rs2)
 
 	byte0 := byte(rs2Value >> (0 * 8))
 	byte1 := byte(rs2Value >> (1 * 8))
 	byte2 := byte(rs2Value >> (2 * 8))
 	byte3 := byte(rs2Value >> (3 * 8))
 
-	offsetBase := shared.ImmS(inst) + uint32(shared.RS1(inst))
+	offsetBase := sImm + uint32(rs1)
 
 	mem.Store(offsetBase+0, byte0)
 	mem.Store(offsetBase+1, byte1)
@@ -266,9 +298,11 @@ func SW(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfa
 //
 // addi rd, rs1, imm
 func ADDI(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
-	rs1 := regs.Get(shared.RS1(inst))
+	rd := shared.RD(inst)
+	rs1 := shared.RS1(inst)
+	iImm := shared.ImmI(inst)
 
-	regs.Set(shared.RD(inst), rs1+shared.ImmI(inst))
+	regs.Set(rd, regs.Get(rs1)+iImm)
 }
 
 // SLTI (set less than immediate) places the value 1 in register rd if register rs1 is less than the sign-
@@ -338,10 +372,11 @@ func SRAI(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem inter
 //
 // add rd, rs1, rs2
 func ADD(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
-	rs1 := regs.Get(shared.RS1(inst))
-	rs2 := regs.Get(shared.RS2(inst))
+	rd := shared.RD(inst)
+	rs1 := shared.RS1(inst)
+	rs2 := shared.RS2(inst)
 
-	regs.Set(shared.RD(inst), rs1+rs2)
+	regs.Set(rd, regs.Get(rs1)+regs.Get(rs2))
 }
 
 // SUB performs the subtraction of rs2 from rs1. Overflows are ignored and the low XLEN bits of results are written to the
@@ -349,10 +384,11 @@ func ADD(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interf
 //
 // sub rd, rs1, rs2
 func SUB(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
-	rs1 := regs.Get(shared.RS1(inst))
-	rs2 := regs.Get(shared.RS2(inst))
+	rd := shared.RD(inst)
+	rs1 := shared.RS1(inst)
+	rs2 := shared.RS2(inst)
 
-	regs.Set(shared.RD(inst), rs1-rs2)
+	regs.Set(rd, regs.Get(rs1)-regs.Get(rs2))
 }
 
 // SLL (shift left logical) performs a logical left shift on the value in register rs1 by the shift amount held in the
