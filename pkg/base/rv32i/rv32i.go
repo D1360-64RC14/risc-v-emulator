@@ -2,6 +2,7 @@ package rv32i
 
 import (
 	"github.com/d1360-64rc14/risc-v-emulator/pkg/instructionset"
+	"github.com/d1360-64rc14/risc-v-emulator/pkg/instructionset/rv32i"
 	"github.com/d1360-64rc14/risc-v-emulator/pkg/interfaces"
 	"github.com/d1360-64rc14/risc-v-emulator/pkg/register/x32register"
 	"github.com/d1360-64rc14/risc-v-emulator/pkg/shared"
@@ -14,9 +15,12 @@ type RV32I struct {
 	mem  interfaces.Memory[uint32]
 }
 
-func New(mem interfaces.Memory[uint32]) *RV32I {
+func New(
+	regs *x32register.X32Register[uint32],
+	mem interfaces.Memory[uint32],
+) *RV32I {
 	return &RV32I{
-		regs: x32register.New[uint32](),
+		regs: regs,
 		pc:   0,
 		mem:  mem,
 	}
@@ -30,6 +34,10 @@ func (r *RV32I) Start() {
 		r.execute(instFn, inst)
 
 		r.pc += 4
+
+		if inst&shared.E_TYPE == rv32i.SIGNATURE_EBREAK {
+			return
+		}
 	}
 }
 
