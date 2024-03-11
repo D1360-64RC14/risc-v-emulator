@@ -84,9 +84,9 @@ func RV32IBase(inst uint32) shared.Instruction[uint32, types.X32Regs] {
 		return rv32i.AND
 	case inst&shared.I_TYPE == rv32i.SIGNATURE_FENCE:
 		return rv32i.FENCE
-	case inst&shared.I_TYPE == rv32i.SIGNATURE_ECALL:
+	case inst&shared.E_TYPE == rv32i.SIGNATURE_ECALL:
 		return rv32i.ECALL
-	case inst&shared.I_TYPE == rv32i.SIGNATURE_EBREAK:
+	case inst&shared.E_TYPE == rv32i.SIGNATURE_EBREAK:
 		return rv32i.EBREAK
 	}
 
