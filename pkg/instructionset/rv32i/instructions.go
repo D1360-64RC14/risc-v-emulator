@@ -1,9 +1,9 @@
 package rv32i
 
 import (
-	"github.com/d1360-64rc14/risc-v-emulator/pkg/interfaces"
+	"github.com/d1360-64rc14/risc-v-emulator/pkg/memory"
+	"github.com/d1360-64rc14/risc-v-emulator/pkg/registerset"
 	"github.com/d1360-64rc14/risc-v-emulator/pkg/shared"
-	"github.com/d1360-64rc14/risc-v-emulator/pkg/types"
 )
 
 // LUI (load upper immediate) is used to build 32-bit constants and uses the U-type format. LUI
@@ -11,7 +11,7 @@ import (
 // 12 bits with zeros.
 //
 // lui rd, imm
-func LUI(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func LUI(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 	rd := shared.RD(inst)
 	uImm := shared.ImmU(inst)
 
@@ -24,7 +24,7 @@ func LUI(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interf
 // rd.
 //
 // auipc rd, imm
-func AUIPC(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func AUIPC(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 	rd := shared.RD(inst)
 	uImm := shared.ImmU(inst)
 
@@ -38,7 +38,7 @@ func AUIPC(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem inte
 // The address of the instruction following the jump (pc+4) is written to register rd.
 //
 // jal rd, imm
-func JAL(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func JAL(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 	rd := shared.RD(inst)
 	jImm := shared.ImmJ(inst)
 
@@ -54,7 +54,7 @@ func JAL(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interf
 // (pc+4) is written to register rd.
 //
 // jalr rd, offset(rs1)
-func JALR(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func JALR(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 	rd := shared.RD(inst)
 	rs1 := shared.RS1(inst)
 	iImm := shared.ImmI(inst)
@@ -67,7 +67,7 @@ func JALR(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem inter
 // BEQ (branch if equal) take the branch if registers rs1 and rs2 are equal.
 //
 // beq rs1, rs2, offset
-func BEQ(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func BEQ(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 	rs1 := shared.RS1(inst)
 	rs2 := shared.RS2(inst)
 	iImm := shared.ImmI(inst)
@@ -80,7 +80,7 @@ func BEQ(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interf
 // BNE (branch if not equal) take the branch if registers rs1 and rs2 are unequal.
 //
 // bne rs1, rs2, offset
-func BNE(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func BNE(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 	rs1 := shared.RS1(inst)
 	rs2 := shared.RS2(inst)
 	iImm := shared.ImmI(inst)
@@ -94,7 +94,7 @@ func BNE(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interf
 // signed comparison.
 //
 // blt rs1, rs2, offset
-func BLT(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func BLT(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 	rs1 := shared.RS1(inst)
 	rs2 := shared.RS2(inst)
 	iImm := shared.ImmI(inst)
@@ -111,7 +111,7 @@ func BLT(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interf
 // than or equal to rs2, using signed comparison.
 //
 // bge rs1, rs2, offset
-func BGE(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func BGE(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 	rs1 := shared.RS1(inst)
 	rs2 := shared.RS2(inst)
 	iImm := shared.ImmI(inst)
@@ -128,7 +128,7 @@ func BGE(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interf
 // unsigned comparison.
 //
 // bltu rs1, rs2, offset
-func BLTU(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func BLTU(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 	rs1 := shared.RS1(inst)
 	rs2 := shared.RS2(inst)
 
@@ -141,7 +141,7 @@ func BLTU(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem inter
 // than or equal to rs2, using unsigned comparison.
 //
 // bgeu rs1, rs2, offset
-func BGEU(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func BGEU(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 	rs1 := shared.RS1(inst)
 	rs2 := shared.RS2(inst)
 
@@ -154,7 +154,7 @@ func BGEU(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem inter
 // Sign-extending to 32-bits before storing in rd.
 //
 // lb rd, offset(rs1)
-func LB(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func LB(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 	rd := shared.RD(inst)
 	rs1 := shared.RS1(inst)
 	iImm := shared.ImmI(inst)
@@ -168,7 +168,7 @@ func LB(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfa
 // Sign-extending to 32-bits before storing in rd.
 //
 // lh rd, offset(rs)
-func LH(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func LH(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 	rd := shared.RD(inst)
 	rs1 := shared.RS1(inst)
 	iImm := shared.ImmI(inst)
@@ -186,7 +186,7 @@ func LH(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfa
 // LW (load word) loads a 32-bit value from memory at address offset + rs to rd.
 //
 // lw rd, offset(rs)
-func LW(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func LW(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 	rd := shared.RD(inst)
 	rs1 := shared.RS1(inst)
 	iImm := shared.ImmI(inst)
@@ -211,7 +211,7 @@ func LW(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfa
 // Zero-extending to 32-bits before storing in rd.
 //
 // lbu rd, offset(rs)
-func LBU(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func LBU(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 	rd := shared.RD(inst)
 	rs1 := shared.RS1(inst)
 	iImm := shared.ImmI(inst)
@@ -225,7 +225,7 @@ func LBU(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interf
 // Zero-extending to 32-bits before storing in rd.
 //
 // lhu rd, offset(rs)
-func LHU(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func LHU(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 	rd := shared.RD(inst)
 	rs1 := shared.RS1(inst)
 	iImm := shared.ImmI(inst)
@@ -243,7 +243,7 @@ func LHU(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interf
 // SB (store byte) stores the lower 8-bits of rs2 to memory at address offset + rs1.
 //
 // sb rs2, offset(rs1)
-func SB(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func SB(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 	rs1 := shared.RS1(inst)
 	rs2 := shared.RS2(inst)
 	sImm := shared.ImmS(inst)
@@ -254,7 +254,7 @@ func SB(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfa
 // SH (store half-word) stores the lower 16-bits of rs2 to memory at address offset + rs1.
 //
 // sb rs2, offset(rs1)
-func SH(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func SH(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 	rs1 := shared.RS1(inst)
 	rs2 := shared.RS2(inst)
 	sImm := shared.ImmS(inst)
@@ -273,7 +273,7 @@ func SH(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfa
 // SW (store word) stores the 32-bits of rs2 to memory at address offset + rs1.
 //
 // sb rs2, offset(rs1)
-func SW(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func SW(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 	rs1 := shared.RS1(inst)
 	rs2 := shared.RS2(inst)
 	sImm := shared.ImmS(inst)
@@ -297,7 +297,7 @@ func SW(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfa
 // the result is simply the low XLEN bits of the result.
 //
 // addi rd, rs1, imm
-func ADDI(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func ADDI(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 	rd := shared.RD(inst)
 	rs1 := shared.RS1(inst)
 	iImm := shared.ImmI(inst)
@@ -309,7 +309,7 @@ func ADDI(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem inter
 // extended immediate when both are treated as signed numbers, else 0 is written to rd.
 //
 // slti rd, rs1, imm
-func SLTI(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func SLTI(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 
 }
 
@@ -318,28 +318,28 @@ func SLTI(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem inter
 // (i.e., the immediate is first sign-extended to XLEN bits then treated as an unsigned number).
 //
 // sltiu rd, rs1, imm
-func SLTIU(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func SLTIU(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 
 }
 
 // XORI (xor immediate) perform a bitwise XOR on register rs1 and then sign-extended 12-bit immediate and place the result in rd.
 //
 // xori rd, rs1, imm
-func XORI(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func XORI(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 
 }
 
 // ORI (or immediate) perform a bitwise OR on register rs1 and then sign-extended 12-bit immediate and place the result in rd.
 //
 // ori rd, rs1, imm
-func ORI(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func ORI(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 
 }
 
 // ANDI (and immediate) perform a bitwise AND on register rs1 and then sign-extended 12-bit immediate and place the result in rd.
 //
 // andi rd, rs1, imm
-func ANDI(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func ANDI(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 
 }
 
@@ -347,7 +347,7 @@ func ANDI(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem inter
 // the result in rd. SLLI is a logical left shift (zeros are shifted into the lower bits).
 //
 // slli rd, rs1, shamt
-func SLLI(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func SLLI(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 
 }
 
@@ -355,7 +355,7 @@ func SLLI(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem inter
 // the result in rd. SRLI is a logical right shift (zeros are shifted into the upper bits).
 //
 // srli rd, rs1, shamt
-func SRLI(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func SRLI(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 
 }
 
@@ -363,7 +363,7 @@ func SRLI(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem inter
 // the result in rd. SRAI is an arithmetic right shift (the original sign bit is copied into the vacated upper bits).
 //
 // srai rd, rs1, shamt
-func SRAI(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func SRAI(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 
 }
 
@@ -371,7 +371,7 @@ func SRAI(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem inter
 // destination rd.
 //
 // add rd, rs1, rs2
-func ADD(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func ADD(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 	rd := shared.RD(inst)
 	rs1 := shared.RS1(inst)
 	rs2 := shared.RS2(inst)
@@ -383,7 +383,7 @@ func ADD(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interf
 // destination rd.
 //
 // sub rd, rs1, rs2
-func SUB(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func SUB(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 	rd := shared.RD(inst)
 	rs1 := shared.RS1(inst)
 	rs2 := shared.RS2(inst)
@@ -395,28 +395,28 @@ func SUB(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interf
 // lower 5 bits of register rs2 and place the result in rd.
 //
 // sll rd, rs1, rs2
-func SLL(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func SLL(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 
 }
 
 // SLT (set less than) performs signed comparison writing 1 to rd if rs1 < rs2, 0 otherwise.
 //
 // slt rd, rs1, rs2
-func SLT(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func SLT(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 
 }
 
 // SLTU (set less than un signed) performs unsigned comparison writing 1 to rd if rs1 < rs2, 0 otherwise.
 //
 // sltu rd, rs1, rs2
-func SLTU(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func SLTU(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 
 }
 
 // XOR performs bitwise logical XOR operation (rd = rs1 XOR rs2).
 //
 // xor rd, rs1, rs2
-func XOR(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func XOR(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 
 }
 
@@ -424,7 +424,7 @@ func XOR(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interf
 // register rs2 and place the result in rd.
 //
 // srl rd, rs1, rs2
-func SRL(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func SRL(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 
 }
 
@@ -432,36 +432,36 @@ func SRL(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interf
 // of register rs2 and place the result in rd.
 //
 // sra rd, rs1, rs2
-func SRA(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func SRA(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 
 }
 
 // OR performs bitwise logical OR operation (rd = rs1 OR rs2).
 //
 // or rd, rs1, rs2
-func OR(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func OR(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 
 }
 
 // AND performs bitwise logical AND operation (rd = rs1 AND rs2).
 //
 // and rd, rs1, rs2
-func AND(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func AND(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 
 }
 
-func FENCE(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func FENCE(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 
 }
 
 // ECALL (environment call) is used to make a service request to the execution environment. The EEI
 // will define how parameters for the service request are passed, but usually these will be in defined
 // locations in the integer register file.
-func ECALL(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func ECALL(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 	// NOP
 }
 
 // EBREAK (environment break) is used to return control to a debugging environment.
-func EBREAK(regs interfaces.Register[uint32, types.X32Regs], pc *uint32, mem interfaces.Memory[uint32], inst uint32) {
+func EBREAK(regs registerset.Register[uint32], pc *uint32, mem memory.Memory[uint32], inst uint32) {
 	// NOP
 }

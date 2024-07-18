@@ -1,4 +1,4 @@
-package interfaces
+package memory
 
 import "github.com/d1360-64rc14/risc-v-emulator/pkg/types"
 
